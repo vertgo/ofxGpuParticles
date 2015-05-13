@@ -102,7 +102,7 @@ namespace itg
         updateShader.end();
         glPopAttrib();
         
-        fbos[1 - currentReadFbo].end();
+		fbos[1 - currentReadFbo].end();
         
         currentReadFbo = 1 - currentReadFbo;
     }
