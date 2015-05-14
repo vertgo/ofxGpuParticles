@@ -41,7 +41,7 @@ namespace itg
     {
     }
     
-    void GpuParticles::init(unsigned width, unsigned height, ofPrimitiveMode primitive, bool loadShaders, unsigned numDataTextures)
+    void GpuParticles::init(unsigned width, unsigned height, ofColor* colors, ofPrimitiveMode primitive, bool loadShaders, unsigned numDataTextures)
     {
         this->width = width;
         this->height = height;
@@ -73,6 +73,7 @@ namespace itg
             {
                 mesh.addVertex(ofVec3f(200.f * x / (float)width - 100.f, 200.f * y / (float)height - 100.f, -500.f));
                 mesh.addTexCoord(ofVec2f(x, y));
+				mesh.addColor(colors[x + y * width]);
             }
         }
         mesh.setMode(primitive);
@@ -116,7 +117,8 @@ namespace itg
         drawShader.begin();
         ofNotifyEvent(drawEvent, drawShader, this);
         setUniforms(drawShader);
-        mesh.draw();
+		for (int i = 0; i < 100; i++ )
+			mesh.draw();
         drawShader.end();
 		texture.unbind();
     }
