@@ -62,6 +62,8 @@ namespace itg
         {
             fbos[i].allocate(s);
         }
+
+		colorFBO.allocate(s);
         
         // mesh
         mesh.clear();
@@ -109,11 +111,14 @@ namespace itg
     
     void GpuParticles::draw()
     {
+		//texture.set
+		texture.bind();
         drawShader.begin();
         ofNotifyEvent(drawEvent, drawShader, this);
         setUniforms(drawShader);
         mesh.draw();
         drawShader.end();
+		texture.unbind();
     }
     
     void GpuParticles::setUniforms(ofShader& shader)
@@ -150,6 +155,46 @@ namespace itg
         loadDataTexture(idx, zeroes, x, y, width, height);
         delete[] zeroes;
     }
+	void GpuParticles::setColorImage(ofImage &inImage){
+		unsigned imageWidth = inImage.width;
+		unsigned imageHeight = inImage.height;
+
+		unsigned minWidth = min(imageWidth, width);
+		unsigned minHeight = min(imageHeight, height);
+
+		for (int i = 0; i < width; i++){
+			if (i > minWidth){
+
+			}
+			else{
+				for ( int j = 0; j < height; j++){
+					if (j > minHeight){
+						//do something  to fill in data
+					}
+				}
+			}
+		}
+		
+	}
+
+
+	void GpuParticles::setColorTexture(ofTexture &inTexture){
+		//inTexture.texData.glTypeInternal = GL_RGBA32F_ARB;
+
+		/*if (idx < fbos[currentReadFbo].getNumTextures())
+		{
+			if (!width) width = this->width;
+			if (!height) height = this->height;
+			fbos[currentReadFbo].getTextureReference(idx).bind();
+			glTexSubImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, x, y, width, height, GL_RGBA, GL_FLOAT, data);
+			fbos[currentReadFbo].getTextureReference(idx).unbind();
+		}
+		else ofLogError() << "Trying to load data from array into non-existent buffer.";
+		*/
+
+		texture = inTexture;
+
+	}
     
     void GpuParticles::texturedQuad(float x, float y, float width, float height, float s, float t)
     {

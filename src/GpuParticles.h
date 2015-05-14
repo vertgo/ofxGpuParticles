@@ -61,6 +61,10 @@ namespace itg
         void update();
         void draw();
         
+		
+		void setColorTexture(ofTexture &inTexture);
+		void setColorImage(ofImage &inImage);
+
         void loadDataTexture(unsigned idx, float* data,
                              unsigned x = 0, unsigned y = 0, unsigned width = 0, unsigned height = 0);
         void zeroDataTexture(unsigned idx,
@@ -90,7 +94,10 @@ namespace itg
         void setUniforms(ofShader& shader);
         
         ofFbo fbos[2];
+		ofFbo colorFBO;
+
         ofVboMesh mesh;
+		ofTexture texture;
         ofShader updateShader, drawShader;
         unsigned currentReadFbo;
         unsigned textureLocation;
