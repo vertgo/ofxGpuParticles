@@ -56,10 +56,12 @@ namespace itg
         
         GpuParticles();
         
-        void init(unsigned width, unsigned height, ofColor* colors,
+        void init(unsigned width, unsigned height, /*ofColor* colors,*/
                   ofPrimitiveMode primitive = OF_PRIMITIVE_POINTS, bool loadShaders = true, unsigned numDataTextures = 2);
         void update();
         void draw();
+
+		void setColors(ofColor* colors, unsigned numPoints = 0 );
         
 		
 		void setColorTexture(ofTexture &inTexture);

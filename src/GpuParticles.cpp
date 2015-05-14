@@ -41,7 +41,7 @@ namespace itg
     {
     }
     
-    void GpuParticles::init(unsigned width, unsigned height, ofColor* colors, ofPrimitiveMode primitive, bool loadShaders, unsigned numDataTextures)
+    void GpuParticles::init(unsigned width, unsigned height, /*ofColor* colors,*/ ofPrimitiveMode primitive, bool loadShaders, unsigned numDataTextures)
     {
         this->width = width;
         this->height = height;
@@ -60,6 +60,7 @@ namespace itg
         s.numColorbuffers = numDataTextures;
         for (unsigned i = 0; i < 2; ++i)
         {
+			fbos[i].clear();
             fbos[i].allocate(s);
         }
 
@@ -73,7 +74,8 @@ namespace itg
             {
                 mesh.addVertex(ofVec3f(200.f * x / (float)width - 100.f, 200.f * y / (float)height - 100.f, -500.f));
                 mesh.addTexCoord(ofVec2f(x, y));
-				mesh.addColor(colors[x + y * width]);
+				mesh.addColor( ofColor::white);
+				
             }
         }
         mesh.setMode(primitive);
@@ -109,18 +111,38 @@ namespace itg
         
         currentReadFbo = 1 - currentReadFbo;
     }
+
+	void GpuParticles::setColors(ofColor* colors, unsigned numPoints){
+
+		//hazard if you pass in an array shorter than specified numPoints, you're screwed
+		if (numPoints == 0){
+			numPoints = width*height;
+		}
+		unsigned numVertices = mesh.getVertices().size();
+		for (unsigned i = 0; i < numPoints && i < numVertices; ++i){
+			try{
+				mesh.setColor(i, colors[i]);
+			}
+			catch (...){
+				cout << "dafuq?\n";
+			}
+			//ofColor crash = colors[i];
+			//cout << "colors[i]:" << colors[i] << endl;
+		}
+	}
     
     void GpuParticles::draw()
     {
 		//texture.set
-		texture.bind();
+		//glPointSize(4);
+		//texture.bind();
         drawShader.begin();
         ofNotifyEvent(drawEvent, drawShader, this);
         setUniforms(drawShader);
-		for (int i = 0; i < 100; i++ )
-			mesh.draw();
+		//for (int i = 0; i < 100; i++ )
+		mesh.draw();
         drawShader.end();
-		texture.unbind();
+		//texture.unbind();
     }
     
     void GpuParticles::setUniforms(ofShader& shader)
