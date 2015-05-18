@@ -68,11 +68,13 @@ namespace itg
         
         // mesh
         mesh.clear();
+		ofVec3f zero = ofVec3f::zero();
         for (int y = 0; y < height; ++y)
         {
             for (int x = 0; x < width; ++x)
             {
-                mesh.addVertex(ofVec3f(200.f * x / (float)width - 100.f, 200.f * y / (float)height - 100.f, -500.f));
+                //mesh.addVertex(ofVec3f(200.f * x / (float)width - 100.f, 200.f * y / (float)height - 100.f, -500.f));
+				mesh.addVertex(zero);
                 mesh.addTexCoord(ofVec2f(x, y));
 				mesh.addColor( ofColor::white);
 				
