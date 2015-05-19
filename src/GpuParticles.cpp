@@ -64,7 +64,10 @@ namespace itg
             fbos[i].allocate(s);
         }
 
+		//s.numColorbuffers = 1;
 		colorFBO.allocate(s);
+		forceFBO.clear();
+		forceFBO.allocate(s);
         
         // mesh
         mesh.clear();
@@ -86,6 +89,7 @@ namespace itg
         if (loadShaders)
         {
             updateShader.load(UPDATE_SHADER_NAME);
+			//updateShader.load("update.vert", "update.frag", "update.geom");
             drawShader.load(DRAW_SHADER_NAME);
         }
     }
@@ -93,6 +97,7 @@ namespace itg
     void GpuParticles::update()
     {
         fbos[1 - currentReadFbo].begin(false);
+		//forceFBO.begin(false);
         glPushAttrib(GL_ENABLE_BIT);
         // we set up no camera model and ignore the modelview and projection matrices
         // in the vertex shader, we make a viewport large enought to ensure the shader
@@ -101,7 +106,8 @@ namespace itg
         glDisable(GL_BLEND);
         ofSetColor(255, 255, 255);
         fbos[1 - currentReadFbo].activateAllDrawBuffers();
-        
+		//forceFBO.activateAllDrawBuffers();
+
         updateShader.begin();
         ofNotifyEvent(updateEvent, updateShader, this);
         setUniforms(updateShader);
@@ -110,6 +116,7 @@ namespace itg
         glPopAttrib();
         
 		fbos[1 - currentReadFbo].end();
+		//forceFBO.end();
         
         currentReadFbo = 1 - currentReadFbo;
     }
@@ -155,6 +162,13 @@ namespace itg
             oss << UNIFORM_PREFIX << ofToString(i);
             shader.setUniformTexture(oss.str().c_str(), fbos[currentReadFbo].getTextureReference(i), i + textureLocation);
         }
+
+		//added by mike
+		//shader.setUniformTexture( "forces", forceFBO.getTextureReference(0), 0 + textureLocation);
+
+		//leftoff something wrong with the way i write the forces here ^
+
+		shader.setUniformTexture("forces", forceFBO.getTextureReference(0), 2 + textureLocation);
     }
     
     void GpuParticles::loadDataTexture(unsigned idx, float* data,
@@ -170,6 +184,17 @@ namespace itg
         }
         else ofLogError() << "Trying to load data from array into non-existent buffer.";
     }
+
+	void GpuParticles::loadForceTexture(float* data,
+		unsigned x, unsigned y , unsigned width , unsigned height ){
+
+
+		if (!width) width = this->width;
+		if (!height) height = this->height;
+		forceFBO.getTextureReference(0).bind();
+		glTexSubImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, x, y, width, height, GL_RGBA, GL_FLOAT, data);
+		forceFBO.getTextureReference(0).unbind();
+	}
     
     void GpuParticles::zeroDataTexture(unsigned idx,
                                        unsigned x, unsigned y, unsigned width, unsigned height)

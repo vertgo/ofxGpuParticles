@@ -67,16 +67,25 @@ namespace itg
 		void setColorTexture(ofTexture &inTexture);
 		void setColorImage(ofImage &inImage);
 
-        void loadDataTexture(unsigned idx, float* data,
-                             unsigned x = 0, unsigned y = 0, unsigned width = 0, unsigned height = 0);
+
+		void loadDataTexture(unsigned idx, float* data,
+			unsigned x = 0, unsigned y = 0, unsigned width = 0, unsigned height = 0);
         void zeroDataTexture(unsigned idx,
                              unsigned x = 0, unsigned y = 0, unsigned width = 0, unsigned height = 0);
+
+		//added by mike
+		void loadForceTexture(float* data,
+			unsigned x = 0, unsigned y = 0, unsigned width = 0, unsigned height = 0);
         
         unsigned getWidth() const { return width; }
         unsigned getHeight() const { return height; }
         unsigned getNumFloats() const { return numFloats; }
         
-        void setTextureLocation(unsigned textureLocation) { this->textureLocation = textureLocation; }
+        void setTextureLocation(unsigned textureLocation) {
+			
+			cout << "setTextureLocation" << endl;
+			this->textureLocation = textureLocation;
+		}
         
         // listen to these events to set custom uniforms
         ofEvent<ofShader> updateEvent;
@@ -96,6 +105,7 @@ namespace itg
         void setUniforms(ofShader& shader);
         
         ofFbo fbos[2];
+		ofFbo forceFBO;
 		ofFbo colorFBO;
 
         ofVboMesh mesh;
