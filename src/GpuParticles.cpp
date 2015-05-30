@@ -149,6 +149,7 @@ namespace itg
         ofNotifyEvent(drawEvent, drawShader, this);
         setUniforms(drawShader);
 		//for (int i = 0; i < 100; i++ )
+		glEnable(GL_POINT_SMOOTH);
 		mesh.draw();
         drawShader.end();
 		//texture.unbind();
@@ -311,4 +312,15 @@ namespace itg
         }
         else ofLogError() << "Could not load particle data from " << ofToDataPath(fileName, true);
     }
+
+	void GpuParticles::setPreset(EffectPreset inPreset){
+		
+		curPreset = inPreset;
+
+		cout << "GpuParticles::setPreset::drawShaderName:" << inPreset.particleDrawShaderName << endl;
+		drawShader.load(inPreset.particleDrawShaderName);
+		updateShader.load(inPreset.particleDrawShaderName);
+
+
+	}
 }

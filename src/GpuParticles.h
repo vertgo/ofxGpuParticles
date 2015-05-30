@@ -32,6 +32,7 @@
 #pragma once
 
 #include "ofMain.h"
+#include "EffectPreset.h"
 
 namespace itg
 {
@@ -99,6 +100,10 @@ namespace itg
         
         void save(const string& fileName);
         void load(const string& fileName);
+
+		EffectPreset curPreset;
+
+		void setPreset(EffectPreset inPreset);
         
     private:
         void texturedQuad(float x, float y, float width, float height, float s, float t);
